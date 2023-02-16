@@ -70,19 +70,8 @@ uint64_t RandomXorsh::generate64()
 
 double RandomXorsh::generateDouble(const double min, const double max)
 {
-	uint32_t integer = random.generate64();
+	uint32_t integer = generate64();
 	double dfloat = (double)integer;
 	/// dfloat = dfloat / (max - min) + min;		/// min ? max ???
 	return dfloat;
-}
-
-/// tests
-
-void test_RandomXorsh()
-{
-	RandomXorsh xorsh;
-	for (uint32_t i = 0; i < 1024; i++)
-	{
-		printf("%u \n", normToRange(xorsh.generate32(), 2, 10));
-	}
 }
