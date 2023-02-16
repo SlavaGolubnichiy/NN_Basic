@@ -1,10 +1,14 @@
-#include <stdexcept>
 #include <string>
 #include <vector>
 
 #include "Matrix.h"
+#include "float64.h"
 
-static void exceptIfDenyDimensions(const int rows, const int cols)
+
+/* PUBLIC MEMBER FUNCTIONS
+ ********************************/
+
+void Matrix::exceptIfDenyDimensions(const int rows, const int cols)
 {
 	if (rows <= 0 || cols <= 0)
 	{
@@ -12,7 +16,19 @@ static void exceptIfDenyDimensions(const int rows, const int cols)
 	}
 }
 
-static void exceptIfDenyAddSub(const Matrix& m1, const Matrix& m2)
+void Matrix::exceptIfDenyIndexes(const int i, const int j) const
+{
+	if (i < 0 || rows_ < i)
+	{
+		throw std::invalid_argument("row(i) must be in range [0; rows_]");
+	}
+	if (j < 0 || cols_ < j)
+	{
+		throw std::invalid_argument("column(j) must be in range [0; cols_]");
+	}
+}
+
+void Matrix::exceptIfDenyAddSub(const Matrix& m1, const Matrix& m2)
 {
 	if (m1.rows_ != m2.rows_)
 	{
@@ -25,9 +41,6 @@ static void exceptIfDenyAddSub(const Matrix& m1, const Matrix& m2)
 }
 
 
-
-/* PUBLIC MEMBER FUNCTIONS
- ********************************/
 
 // matrix like:
 // 1 0 0
@@ -61,7 +74,7 @@ Matrix::Matrix(const int rows, const int cols, const double value)
 	cols_(cols)
 {
 	exceptIfDenyDimensions(rows, cols);
-	allocSpace();
+	allocMem(this->p, rows_, cols_);
 	for (int i = 0; i < rows_; ++i)
 	{
 		for (int j = 0; j < cols_; ++j)
@@ -77,7 +90,7 @@ Matrix::Matrix(const double** ptr, const int rows, const int cols)
 	cols_(cols)
 {
 	exceptIfDenyDimensions(rows, cols);
-	allocSpace();
+	allocMem(this->p, rows_, cols_);
 	for (int i = 0; i < rows_; ++i)
 	{
 		for (int j = 0; j < cols_; ++j)
@@ -102,7 +115,7 @@ Matrix::Matrix(const std::vector<std::vector<double>> mat)
 		}
 	}
 
-	allocSpace();
+	allocMem(this->p, rows_, cols_);
 	for (int i = 0; i < rows_; ++i)
 	{
 		for (int j = 0; j < cols_; ++j)
@@ -127,7 +140,7 @@ Matrix::Matrix(const std::vector<double> data, bool isSingleColumn)
 		rows_ = dataSize;
 		cols_ = 1;
 		exceptIfDenyDimensions(rows_, cols_);
-		allocSpace();
+		allocMem(this->p, rows_, cols_);
 		for (int i = 0; i < dataSize; ++i)
 		{
 			p[i][0] = data[i];
@@ -139,7 +152,7 @@ Matrix::Matrix(const std::vector<double> data, bool isSingleColumn)
 		rows_ = 1;
 		cols_ = dataSize;
 		exceptIfDenyDimensions(rows_, cols_);
-		allocSpace();
+		allocMem(this->p, rows_, cols_);
 		for (int i = 0; i < dataSize; ++i)
 		{
 			p[0][i] = data[i];
@@ -149,7 +162,7 @@ Matrix::Matrix(const std::vector<double> data, bool isSingleColumn)
 
 Matrix::~Matrix()
 {
-	freeSpace();
+	freeMem(this->p, this->rows_);
 }
 
 Matrix::Matrix(const Matrix& m)
@@ -157,7 +170,7 @@ Matrix::Matrix(const Matrix& m)
 	rows_(m.rows_),
 	cols_(m.cols_)
 {
-	allocSpace();
+	allocMem(this->p, rows_, cols_);
 	for (int i = 0; i < rows_; ++i)
 	{
 		for (int j = 0; j < cols_; ++j)
@@ -165,6 +178,20 @@ Matrix::Matrix(const Matrix& m)
 			p[i][j] = m.p[i][j];
 		}
 	}
+}
+
+
+
+double Matrix::get(const unsigned int i, const unsigned int j) const
+{
+	exceptIfDenyIndexes(i, j);
+	return p[i][j];
+}
+
+void Matrix::set(const unsigned int i, const unsigned int j, const double value)
+{
+	exceptIfDenyIndexes(i, j);
+	p[i][j] = value;
 }
 
 Matrix& Matrix::operator=(const Matrix& m)
@@ -181,10 +208,10 @@ Matrix& Matrix::operator=(const Matrix& m)
 
 	if ((rows_ != m.rows_) || (cols_ != m.cols_))
 	{
-		freeSpace();
+		freeMem(this->p, this->rows_);
 		rows_ = m.rows_;
 		cols_ = m.cols_;
-		allocSpace();
+		allocMem(this->p, rows_, cols_);
 	}
 
 	for (int i = 0; i < rows_; ++i)
@@ -275,44 +302,38 @@ Matrix& Matrix::operator/=(const double& num)
 	return *this;
 }
 
-std::string Matrix::toString(const std::string& delim) const
+#include <sstream>	// for toString(double) with precision
+#include <iomanip>	// for toString(double) with precision
+std::string Matrix::toString(const std::string& delim, const unsigned int precision) const
 {
 	std::string s = "";
 	for (int i = 0; i < rows_; ++i)
 	{
-		s += std::to_string(p[i][0]);
+		s += float64::toString(p[i][0], precision);
 		for (int j = 1; j < cols_; ++j)
 		{
-			s += delim + std::to_string(p[i][j]);
+			s += delim + float64::toString(p[i][j], precision);
 		}
 		s += "\n";
 	}
 	return s;
-}
 
-
-
-/* PRIVATE HELPER FUNCTIONS
- ********************************/
-
-void Matrix::allocSpace()
-{
-	p = new double*[rows_];
-	for (unsigned int i = 0; i < rows_; ++i)
-	{
-		p[i] = new double[cols_] {0};
-	}
-}
-
-void Matrix::freeSpace()
-{
+	/// variant 2 (might have better performance)
+	/*
+	std::ostringstream res;
+	res << std::fixed << std::setprecision(precision);
 	for (int i = 0; i < rows_; ++i)
 	{
-		delete[] p[i];
-		p[i] = nullptr;
+		res << p[i][0];
+		for (int j = 1; j < cols_; ++j)
+		{
+			res << delim << p[i][j];
+		}
+		res << "\n";
 	}
-	delete[] p;
-	p = nullptr;
+	return res.str();
+	*/
+
 }
 
 

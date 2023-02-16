@@ -3,23 +3,25 @@
 #include <vector>
 #include <string>
 
-#include <sstream>	// for double to String with precision
-#include <iomanip>
 
+#include "float64.h"
 #include "Matrix.h"
+#include "NeuralNet/NNetwork.h"
+
 
 
 /// TODO
 // priority: HIGH
-// find where printed precision comes from (6 numbers after the dot)
 // separate Layer::constructor for InputLayer from LayerV2 as possible
+
 
 // priority: LOW
 // FileContent01ToMatrix() - file can contain not a rect. matrix
 // LayerV2::LayerV2() {} - try delete it 
 // Classes access modificators (Matrix, LayerV2, NetworkV2)
 // check performance
-
+// improve code style, methods' names etc.
+// parallelize some matrix's class methords (+ , -, /, *num, toString, *mat, etc)
 
 
 class ReaderTxt
@@ -125,15 +127,9 @@ void FileContent01ToMatrix(const TxtData& txtData, unsigned int** m, const unsig
 
 
 
-std::string toStringWithPrecision(double value, unsigned int precision)
-{
-	
-	std::ostringstream streamObj3;		// create an output string stream
-	streamObj3 << std::fixed;			// set fixed-point Notation
-	streamObj3 << std::setprecision(precision);
-	streamObj3 << value;				// add double to stream
-	return streamObj3.str();
-}
+
+
+
 
 std::string toString(double** matrix, unsigned int matrixRows, unsigned int matrixCols, unsigned int doublePrecision)
 {
@@ -143,17 +139,13 @@ std::string toString(double** matrix, unsigned int matrixRows, unsigned int matr
 		std::string row = "";
 		for (uint32_t j = 0; j < matrixCols; j++)
 		{
-			row += toStringWithPrecision(matrix[i][j], 2) + " ";	// std::to_string() for regular
+			row += float64::toString(matrix[i][j], 2) + " ";	// std::to_string() for regular
 		}
 		row += "\n";
 		res += row;
 	}
 	return res;
 }
-
-
-
-#include "NeuralNet/NNetwork.h"
 
 
 
@@ -212,8 +204,7 @@ int main()
 	NNetwork net = NNetwork(in.size(), layersNum);
 	net.runOnce(x);
 	
-
-
+	
 
 
 

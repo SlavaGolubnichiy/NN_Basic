@@ -28,19 +28,22 @@ static inline uint32_t getNsFromEpoch()
 class RandomXorsh
 {
 	private:
-	uint32_t state;		// leave to be initialized with random value from memory, 
-						// same initial states will produce same sequences :(	=> make it Singleton
+	uint32_t state;		// leave initialized with random value from memory, 
+						// same initial states produce same sequences :(	=> make it Singleton
 
 	public:
 	RandomXorsh();
 	uint32_t generate32();	// xorsh32
 	//uint32_t generate32(uint32_t min, uint32_t max);	// xorsh32
 	uint64_t generate64();
-	//uint64_t generate64(uint64_t min, uint64_t max);
-	double generateDouble(const double min, const double max);
-
+	//uint32_t generate32(uint32_t min, uint32_t max);	// xorsh32
+	double generateDouble();
+	double generateDoubleRange01();
 };
 
+
+
+// .cpp - part
 
 RandomXorsh::RandomXorsh()
 	:
@@ -68,10 +71,18 @@ uint64_t RandomXorsh::generate64()
 	return state = x;
 }
 
-double RandomXorsh::generateDouble(const double min, const double max)
+double RandomXorsh::generateDouble()
 {
-	uint32_t integer = generate64();
+	uint64_t integer = generate64();
 	double dfloat = (double)integer;
+	return dfloat;
 	/// dfloat = dfloat / (max - min) + min;		/// min ? max ???
+}
+
+double RandomXorsh::generateDoubleRange01()
+{
+	uint32_t integer = generate32();
+	double dfloat = (double)integer;
+	dfloat = dfloat / (double)UINT32_MAX;
 	return dfloat;
 }

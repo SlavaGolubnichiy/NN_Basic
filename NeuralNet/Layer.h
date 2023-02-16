@@ -1,35 +1,17 @@
 #pragma once
 
+#ifndef __LAYER_H__
+#define __LAYER_H__
+
+#include "../RandomXorsh.h"
+#include "../float64.h"
 #include "../Matrix.h"
 
-static double roundWithPrecision(const double value, const unsigned int precision)
-{
-	double res;
-	double k = pow(10, precision);
-	res = floor(value * k + 0.5) / k;
-	return res;
-}
+
 
 static RandomXorsh random;
-static double randomiseDoubleRange01()
-{
-	uint32_t integer = random.generate32();
-	double dfloat = (double)integer;
-	dfloat = dfloat / (double)UINT32_MAX;
-	dfloat = roundWithPrecision(dfloat, 2);		// floor to hundreds
-	return dfloat;
-}
 
-static void randomiseArrayMatrix(double** mat, const unsigned int rows, const unsigned int cols)
-{
-	for (uint32_t i = 0; i < rows; i++)
-	{
-		for (uint32_t j = 0; j < cols; j++)
-		{
-			mat[i][j] = randomiseDoubleRange01();
-		}
-	}
-}
+
 
 class Layer
 {
@@ -40,30 +22,25 @@ class Layer
 	Layer() {}
 
 	// always set second param to "inputLayer"
-	Layer(const unsigned int inputsSize, const char* ignoredInputLayerStr)
+	Layer(const char* ignoredInputLayerStr, const unsigned int inputsSize)
 	{
 		N = new Matrix(inputsSize, 1);
-		double** mat = nullptr;
-		allocMem(mat, inputsSize, inputsSize);
 		w = new Matrix(Matrix::getIdentityMatrix(inputsSize, inputsSize));
 	}
 
 	Layer(const unsigned int leftLayerNeuronsNum)
 	{
 		N = new Matrix(leftLayerNeuronsNum, 1);
-		double** mat = nullptr;
-		allocMem(mat, leftLayerNeuronsNum, leftLayerNeuronsNum);
-		randomiseArrayMatrix(mat, leftLayerNeuronsNum, leftLayerNeuronsNum);
-		w = new Matrix((const double**)mat, leftLayerNeuronsNum, leftLayerNeuronsNum);
-		freeMem(mat, leftLayerNeuronsNum);
+		w = new Matrix(leftLayerNeuronsNum, leftLayerNeuronsNum);
+		randomiseMatrix(*w);
 	}
 
-	const Matrix& getValues()
+	const Matrix getValues() const
 	{
 		return *N;
 	}
 
-	const Matrix& getWeights()
+	const Matrix getWeights() const
 	{
 		return *w;
 	}
@@ -73,4 +50,18 @@ class Layer
 		*N = (*w) * leftLayerValues;
 	}
 
+	private:
+	void randomiseMatrix(Matrix& mat)
+	{
+		for (unsigned int i = 0; i < mat.rows_; i++)
+		{
+			for (unsigned int j = 0; j < mat.cols_; j++)
+			{
+				mat.set(i, j, float64::floor(random.generateDoubleRange01(), 2));
+			}
+		}
+	}
+
 };
+
+#endif
