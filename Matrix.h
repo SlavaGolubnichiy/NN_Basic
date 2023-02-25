@@ -16,7 +16,7 @@ static inline void allocMem(double**& p, const unsigned int rows, const unsigned
 
 static inline void freeMem(double**& p, const unsigned int rows)
 {
-	for (int i = 0; i < rows; ++i)
+	for (unsigned int i = 0; i < rows; ++i)
 	{
 		delete[] p[i];
 		p[i] = nullptr;

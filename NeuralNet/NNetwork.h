@@ -33,7 +33,7 @@ class NNetwork
 		inputsNum(inputsNum),
 		layersNum(layersNum)
 	{
-		inputLayer = new Layer(inputsNum, "inputs");	// use pointer to matrix initialisation function?
+		inputLayer = new Layer("inputs", inputsNum);	// use pointer to matrix initialisation function?
 		layers = new Layer[layersNum] {};	/// why {Layer(inputsNum)}; does not work ???
 		for (unsigned int i = 0; i < layersNum; i++)
 		{
@@ -84,4 +84,8 @@ class NNetwork
 
 		return layers[layersNum - 1].getValues();
 	}
+
+
+
+
 };
