@@ -13,14 +13,14 @@
 /// TODO
 // priority: HIGH
 // separate Layer::constructor for InputLayer from LayerV2 as possible
-
+// fix int(!) rows, cols in Matrix class working with unsigned int i, j in loops
 
 // priority: LOW
 // FileContent01ToMatrix() - file can contain not a rect. matrix
 // LayerV2::LayerV2() {} - try delete it 
-// Classes access modificators (Matrix, LayerV2, NetworkV2)
-// check performance
 // improve code style, methods' names etc.
+// check performance
+// Classes access modificators (Matrix, LayerV2, NetworkV2)
 // parallelize some matrix's class methords (+ , -, /, *num, toString, *mat, etc)
 
 
@@ -102,7 +102,7 @@ class Reader
 
 void printFileContent(const TxtData& txtData)
 {
-	for (int i = 0; i < txtData.content.size(); i++)
+	for (unsigned int i = 0; i < txtData.content.size(); i++)
 	{
 		printf("%s", txtData.content.at(i).c_str());
 	}
@@ -120,11 +120,13 @@ void FileContent01ToMatrix(const TxtData& txtData, unsigned int** m, const unsig
 			{
 				continue;
 			}
+			// change output matrix from unsigned int to double
 			m[i][j] = (double)(txtData.content.at(i).at(j) - '0');	// 0 if '0', 1 if '1'
 		}
 	}
 }
 
+// ----
 
 
 
@@ -148,8 +150,9 @@ std::string toString(double** matrix, unsigned int matrixRows, unsigned int matr
 }
 
 
+#include "AIS/AIS_VecUint.h"
 
-int main()
+int main(int args)
 {
 	// file reading
 	/*
@@ -197,15 +200,17 @@ int main()
 	
 	std::vector<double> in = 
 	{
-		1, 2
+		1, 2, 3, 
+		4, 5, 6, 
+		7, 8, 9
 	};
 	Matrix x(in, true);
-	unsigned int layersNum = 2;
+	unsigned int layersNum = 9;
 	NNetwork net = NNetwork(in.size(), layersNum);
 	net.runOnce(x);
 	
 	
-
+	// test_AISClass();
 
 
 
