@@ -28,21 +28,23 @@ static inline void freeMem(double**& p, const unsigned int rows)
 class Matrix
 {
 	private:
-	static void exceptIfDenyDimensions(const int rows, const int cols);
+	static void exceptIfDenyDimensions(const unsigned int rows, const unsigned int cols);
 	static void exceptIfDenyAddSub(const Matrix& m1, const Matrix& m2);
-	void exceptIfDenyIndexes(const int i, const int j) const;
+	void exceptIfDenyIndexes(const unsigned int i, const unsigned int j) const;
 
 	public:
-	static Matrix getIdentityMatrix(const int rows, const int cols);
-	Matrix(const int rows, const int cols, const double value = 0);
-	Matrix(const double** data, const int rows, const int cols);
+	static Matrix getIdentityMatrix(const unsigned int rows, const unsigned int cols);
+	Matrix(const unsigned int rows, const unsigned int cols);
+	Matrix(const double** data, const unsigned int rows, const unsigned int cols);
 	Matrix(const std::vector<std::vector<double>> mat);
 	Matrix(const std::vector<double> data, bool isSingleColumn);
 	~Matrix();
 	Matrix(const Matrix& m);
 
+	unsigned int rows() const;
+	unsigned int cols() const;
 	double get(const unsigned int i, const unsigned int j) const;
-	void set(unsigned int i, unsigned int j, double value);
+	void set(const unsigned int i, const unsigned int j, const double value);
 	Matrix& operator=(const Matrix& m);
 	Matrix& operator+=(const Matrix& m);
 	Matrix& operator-=(const Matrix& m);
@@ -52,8 +54,9 @@ class Matrix
 
 	std::string toString(const std::string& delim = " ", const unsigned int precision = 3) const;
 
-	public:		/// !!!
-	int rows_ = -1, cols_ = -1;
+	private:
+	unsigned int rows_ = 0;
+	unsigned int cols_ = 0;
 	double **p = nullptr;
 };
 

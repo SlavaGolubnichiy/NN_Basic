@@ -8,12 +8,11 @@
 #include "Matrix.h"
 #include "NeuralNet/NNetwork.h"
 
-
-
 /// TODO
 // priority: HIGH
-// separate Layer::constructor for InputLayer from LayerV2 as possible
-// fix int(!) rows, cols in Matrix class working with unsigned int i, j in loops
+// - separate Layer::constructor for InputLayer as possible
+// - fix int(!) rows, cols in Matrix class working with unsigned int i, j in loops
+// 
 
 // priority: LOW
 // FileContent01ToMatrix() - file can contain not a rect. matrix
@@ -152,6 +151,14 @@ std::string toString(double** matrix, unsigned int matrixRows, unsigned int matr
 
 #include "AIS/AIS_VecUint.h"
 
+
+
+
+
+
+
+
+
 int main(int args)
 {
 	// file reading
@@ -197,22 +204,22 @@ int main(int args)
 	*/
 
 
+
+
 	
 	std::vector<double> in = 
 	{
-		1, 2, 3, 
-		4, 5, 6, 
-		7, 8, 9
+		1, 2, 3
 	};
-	Matrix x(in, true);
-	unsigned int layersNum = 9;
+	Matrix x = Matrix(in, true);
+	unsigned int layersNum = 2;
 	NNetwork net = NNetwork(in.size(), layersNum);
 	net.runOnce(x);
+	printf("x = \n%s\n", x.toString(" ").c_str());
+	net.printLastRunData();
 	
 	
-	// test_AISClass();
-
-
+	
 
 
 
@@ -235,4 +242,3 @@ int main(int args)
 	system("pause");
 	return 0;
 }
-

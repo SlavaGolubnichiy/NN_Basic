@@ -1,5 +1,8 @@
 #include <string>
 #include <vector>
+#include <sstream>	// for toString(Mat)::toString(double) with precision
+#include <iomanip>	// for toString(Mat)::toString(double) with precision
+
 
 #include "Matrix.h"
 #include "float64.h"
@@ -8,7 +11,7 @@
 /* PUBLIC MEMBER FUNCTIONS
  ********************************/
 
-void Matrix::exceptIfDenyDimensions(const int rows, const int cols)
+void Matrix::exceptIfDenyDimensions(const unsigned int rows, const unsigned int cols)
 {
 	if (rows <= 0 || cols <= 0)
 	{
@@ -16,13 +19,13 @@ void Matrix::exceptIfDenyDimensions(const int rows, const int cols)
 	}
 }
 
-void Matrix::exceptIfDenyIndexes(const int i, const int j) const
+void Matrix::exceptIfDenyIndexes(const unsigned int i, const unsigned int j) const
 {
-	if (i < 0 || rows_ < i)
+	if (i < 0 || rows_ <= i)
 	{
 		throw std::invalid_argument("row(i) must be in range [0; rows_]");
 	}
-	if (j < 0 || cols_ < j)
+	if (j < 0 || cols_ <= j)
 	{
 		throw std::invalid_argument("column(j) must be in range [0; cols_]");
 	}
@@ -46,7 +49,7 @@ void Matrix::exceptIfDenyAddSub(const Matrix& m1, const Matrix& m2)
 // 1 0 0
 // 0 1 0
 // 0 0 1
-Matrix Matrix::getIdentityMatrix(const int rows, const int cols)
+Matrix Matrix::getIdentityMatrix(const unsigned int rows, const unsigned int cols)
 {
 	exceptIfDenyDimensions(rows, cols);
 	double** src = nullptr;
@@ -68,23 +71,16 @@ Matrix Matrix::getIdentityMatrix(const int rows, const int cols)
 	return Matrix((const double**)src, rows, cols);
 }
 
-Matrix::Matrix(const int rows, const int cols, const double value)
+Matrix::Matrix(const unsigned int rows, const unsigned int cols)	// zero (0) matrix
 	:
 	rows_(rows),
 	cols_(cols)
 {
 	exceptIfDenyDimensions(rows, cols);
 	allocMem(this->p, rows_, cols_);
-	for (int i = 0; i < rows_; ++i)
-	{
-		for (int j = 0; j < cols_; ++j)
-		{
-			p[i][j] = value;
-		}
-	}
 }
 
-Matrix::Matrix(const double** ptr, const int rows, const int cols)
+Matrix::Matrix(const double** ptr, const unsigned int rows, const unsigned int cols)
 	:
 	rows_(rows),
 	cols_(cols)
@@ -181,6 +177,15 @@ Matrix::Matrix(const Matrix& m)
 }
 
 
+unsigned int Matrix::rows() const
+{
+	return rows_;
+}
+
+unsigned int Matrix::cols() const
+{
+	return cols_;
+}
 
 double Matrix::get(const unsigned int i, const unsigned int j) const
 {
@@ -302,8 +307,6 @@ Matrix& Matrix::operator/=(const double& num)
 	return *this;
 }
 
-#include <sstream>	// for toString(double) with precision
-#include <iomanip>	// for toString(double) with precision
 std::string Matrix::toString(const std::string& delim, const unsigned int precision) const
 {
 	std::string s = "";

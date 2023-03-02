@@ -13,6 +13,7 @@
 // implement generateDouble()
 
 
+
 static inline uint32_t getNsFromEpoch()
 {
 	// returns uint64_t, but we optimized
@@ -28,8 +29,8 @@ static inline uint32_t getNsFromEpoch()
 class RandomXorsh
 {
 	private:
-	uint32_t state;		// leave initialized with random value from memory, 
-						// same initial states produce same sequences :(	=> make it Singleton
+	uint32_t state;	// leave initialized with random value from memory, 
+					// same initial states produce same sequences :(	=> make it Singleton
 
 	public:
 	RandomXorsh();

@@ -26,15 +26,25 @@ class NNetwork
 	Layer* inputLayer;
 	Layer* layers;
 	unsigned int layersNum = 0;
+	bool areWeightsReadonly = false;
 
 	public:
+	/// <summary>
+	/// Constructor of Neural Network that takes inputsNum inputs and initialises layersNum number of layers and interlayer-matrices.
+	/// </summary>
+	/// <param name="inputsNum">
+	/// Number of inputs (size of std::vector(unsigend int) input vector) that NN takes in to calc output. 
+	/// </param>
+	/// <param name="layersNum">
+	/// Number of layers of NN, NOT counting inputLayer(!). So, total num. of layers = 1 + layersNum.
+	/// </param>
 	NNetwork(const unsigned int inputsNum, const unsigned int layersNum)
 		:
 		inputsNum(inputsNum),
 		layersNum(layersNum)
 	{
-		inputLayer = new Layer("inputs", inputsNum);	// use pointer to matrix initialisation function?
-		layers = new Layer[layersNum] {};	/// why {Layer(inputsNum)}; does not work ???
+		inputLayer = new Layer(inputsNum, true);	// use pointer to matrix initialisation function?
+		layers = new Layer[layersNum] {};	/// why {Layer(inputsNum)}; does not work ??? bc it initialises only first layer in this way
 		for (unsigned int i = 0; i < layersNum; i++)
 		{
 			layers[i] = Layer(inputsNum);
@@ -55,37 +65,54 @@ class NNetwork
 			inputMat[i][0] = input[i];
 		}
 		Matrix x((const double**)inputMat, inputsNum, 1);
-
 		return runOnce(x);
 	}
 
 	Matrix runOnce(const Matrix& xColumn)
 	{
-		if (inputsNum != xColumn.rows_)
+
+		if (inputsNum != xColumn.rows())
 		{
 			throw std::exception("Number of inputs (1-column rows) must be equal to inputsSize specified");
 		}
-		printf("x = \n%s\n", xColumn.toString(" ").c_str());
 
+		areWeightsReadonly = true;
 		inputLayer->calcMe(xColumn);
-		printf("inputLayer.weights = \n%s\n", inputLayer->getWeights().toString(" ").c_str());
-		printf("inputLayer.values = \n%s\n", inputLayer->getValues().toString(" ").c_str());
-		
 		layers[0].calcMe(inputLayer->getValues());
-		printf("layer%u.weights = \n%s\n", 0, layers[0].getWeights().toString(" ").c_str());
-		printf("layer%u.values = \n%s\n", 0, layers[0].getValues().toString(" ").c_str());
-		
 		for (unsigned int i = 1; i < layersNum; i++)
 		{
 			layers[i].calcMe(layers[i - 1].getValues());
-			printf("layer%u.weights = \n%s\n", i, layers[i].getWeights().toString(" ").c_str());
-			printf("layer%u.values = \n%s\n", i, layers[i].getValues().toString(" ").c_str());
 		}
-
+		areWeightsReadonly = false;
 		return layers[layersNum - 1].getValues();
 	}
 
+	void setWeights(const unsigned int layerIndex, const Matrix& newWeightsValues)
+	{
+		if (layerIndex <= layersNum)
+		{
+			throw std::invalid_argument("layerIndex is out of range of valid indexes");
+		}
+		if (areWeightsReadonly)
+		{
+			throw std::runtime_error("Editing of weights while NN calculates output is not allowed");
+		}
+		
+		layers[layerIndex].setWeightsValues(newWeightsValues);
+	}
 
+	void printLastRunData() const
+	{
+		printf("inputLayer.weights = \n%s\n", inputLayer->getWeights().toString(" ").c_str());
+		printf("inputLayer.values = \n%s\n", inputLayer->getValues().toString(" ").c_str());
 
+		printf("layer%u.weights = \n%s\n", 0, layers[0].getWeights().toString(" ").c_str());
+		printf("layer%u.values = \n%s\n", 0, layers[0].getValues().toString(" ").c_str());
+		for (unsigned int i = 1; i < layersNum; i++)
+		{
+			printf("layer%u.weights = \n%s\n", i, layers[i].getWeights().toString(" ").c_str());
+			printf("layer%u.values = \n%s\n", i, layers[i].getValues().toString(" ").c_str());
+		}
+	}
 
 };
