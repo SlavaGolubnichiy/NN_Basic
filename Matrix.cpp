@@ -3,7 +3,6 @@
 #include <sstream>	// for toString(Mat)::toString(double) with precision
 #include <iomanip>	// for toString(Mat)::toString(double) with precision
 
-
 #include "Matrix.h"
 #include "float64.h"
 
@@ -13,9 +12,9 @@
 
 void Matrix::exceptIfDenyDimensions(const unsigned int rows, const unsigned int cols)
 {
-	if (rows <= 0 || cols <= 0)
+	if (rows < 1 || cols < 1)
 	{
-		throw std::invalid_argument("rows and/or cols must be greater than zero");
+		throw std::invalid_argument("rows and/or cols must be in range [1; N]");
 	}
 }
 
@@ -23,11 +22,11 @@ void Matrix::exceptIfDenyIndexes(const unsigned int i, const unsigned int j) con
 {
 	if (i < 0 || rows_ <= i)
 	{
-		throw std::invalid_argument("row(i) must be in range [0; rows_]");
+		throw std::invalid_argument("row(i) must be in range [0; rows-1]");
 	}
 	if (j < 0 || cols_ <= j)
 	{
-		throw std::invalid_argument("column(j) must be in range [0; cols_]");
+		throw std::invalid_argument("column(j) must be in range [0; cols-1]");
 	}
 }
 
@@ -54,9 +53,9 @@ Matrix Matrix::getIdentityMatrix(const unsigned int rows, const unsigned int col
 	exceptIfDenyDimensions(rows, cols);
 	double** src = nullptr;
 	allocMem(src, rows, cols);
-	for (int i = 0; i < rows; ++i)
+	for (unsigned int i = 0; i < rows; ++i)
 	{
-		for (int j = 0; j < cols; ++j)
+		for (unsigned int j = 0; j < cols; ++j)
 		{
 			if (i != j)
 			{
@@ -87,9 +86,9 @@ Matrix::Matrix(const double** ptr, const unsigned int rows, const unsigned int c
 {
 	exceptIfDenyDimensions(rows, cols);
 	allocMem(this->p, rows_, cols_);
-	for (int i = 0; i < rows_; ++i)
+	for (unsigned int i = 0; i < rows_; ++i)
 	{
-		for (int j = 0; j < cols_; ++j)
+		for (unsigned int j = 0; j < cols_; ++j)
 		{
 			p[i][j] = ptr[i][j];
 		}
@@ -112,9 +111,9 @@ Matrix::Matrix(const std::vector<std::vector<double>> mat)
 	}
 
 	allocMem(this->p, rows_, cols_);
-	for (int i = 0; i < rows_; ++i)
+	for (unsigned int i = 0; i < rows_; ++i)
 	{
-		for (int j = 0; j < cols_; ++j)
+		for (unsigned int j = 0; j < cols_; ++j)
 		{
 			p[i][j] = mat[i][j];
 		}
@@ -137,7 +136,7 @@ Matrix::Matrix(const std::vector<double> data, bool isSingleColumn)
 		cols_ = 1;
 		exceptIfDenyDimensions(rows_, cols_);
 		allocMem(this->p, rows_, cols_);
-		for (int i = 0; i < dataSize; ++i)
+		for (unsigned int i = 0; i < dataSize; ++i)
 		{
 			p[i][0] = data[i];
 		}
@@ -149,7 +148,7 @@ Matrix::Matrix(const std::vector<double> data, bool isSingleColumn)
 		cols_ = dataSize;
 		exceptIfDenyDimensions(rows_, cols_);
 		allocMem(this->p, rows_, cols_);
-		for (int i = 0; i < dataSize; ++i)
+		for (unsigned int i = 0; i < dataSize; ++i)
 		{
 			p[0][i] = data[i];
 		}
@@ -167,9 +166,9 @@ Matrix::Matrix(const Matrix& m)
 	cols_(m.cols_)
 {
 	allocMem(this->p, rows_, cols_);
-	for (int i = 0; i < rows_; ++i)
+	for (unsigned int i = 0; i < rows_; ++i)
 	{
-		for (int j = 0; j < cols_; ++j)
+		for (unsigned int j = 0; j < cols_; ++j)
 		{
 			p[i][j] = m.p[i][j];
 		}
@@ -219,9 +218,9 @@ Matrix& Matrix::operator=(const Matrix& m)
 		allocMem(this->p, rows_, cols_);
 	}
 
-	for (int i = 0; i < rows_; ++i)
+	for (unsigned int i = 0; i < rows_; ++i)
 	{
-		for (int j = 0; j < cols_; ++j)
+		for (unsigned int j = 0; j < cols_; ++j)
 		{
 			p[i][j] = m.p[i][j];
 		}
@@ -232,9 +231,9 @@ Matrix& Matrix::operator=(const Matrix& m)
 Matrix& Matrix::operator+=(const Matrix& m)
 {
 	exceptIfDenyAddSub(*this, m);
-	for (int i = 0; i < rows_; ++i)
+	for (unsigned int i = 0; i < rows_; ++i)
 	{
-		for (int j = 0; j < cols_; ++j)
+		for (unsigned int j = 0; j < cols_; ++j)
 		{
 			p[i][j] += m.p[i][j];
 		}
@@ -245,9 +244,9 @@ Matrix& Matrix::operator+=(const Matrix& m)
 Matrix& Matrix::operator-=(const Matrix& m)
 {
 	exceptIfDenyAddSub(*this, m);
-	for (int i = 0; i < rows_; ++i)
+	for (unsigned int i = 0; i < rows_; ++i)
 	{
-		for (int j = 0; j < cols_; ++j)
+		for (unsigned int j = 0; j < cols_; ++j)
 		{
 			p[i][j] -= m.p[i][j];
 		}
@@ -270,11 +269,11 @@ Matrix& Matrix::operator*=(const Matrix& m)
 	}
 	Matrix res(rows_, m.cols_);
 	
-	for (int i = 0; i < res.rows_; ++i)
+	for (unsigned int i = 0; i < res.rows_; ++i)
 	{
-		for (int j = 0; j < res.cols_; ++j)
+		for (unsigned int j = 0; j < res.cols_; ++j)
 		{
-			for (int k = 0; k < cols_; ++k)
+			for (unsigned int k = 0; k < cols_; ++k)
 			{
 				res.p[i][j] += (p[i][k] * m.p[k][j]);
 			}
@@ -285,9 +284,9 @@ Matrix& Matrix::operator*=(const Matrix& m)
 
 Matrix& Matrix::operator*=(const double& num)
 {
-	for (int i = 0; i < rows_; ++i)
+	for (unsigned int i = 0; i < rows_; ++i)
 	{
-		for (int j = 0; j < cols_; ++j)
+		for (unsigned int j = 0; j < cols_; ++j)
 		{
 			p[i][j] *= num;
 		}
@@ -297,9 +296,9 @@ Matrix& Matrix::operator*=(const double& num)
 
 Matrix& Matrix::operator/=(const double& num)
 {
-	for (int i = 0; i < rows_; ++i)
+	for (unsigned int i = 0; i < rows_; ++i)
 	{
-		for (int j = 0; j < cols_; ++j)
+		for (unsigned int j = 0; j < cols_; ++j)
 		{
 			p[i][j] /= num;
 		}
@@ -310,10 +309,10 @@ Matrix& Matrix::operator/=(const double& num)
 std::string Matrix::toString(const std::string& delim, const unsigned int precision) const
 {
 	std::string s = "";
-	for (int i = 0; i < rows_; ++i)
+	for (unsigned int i = 0; i < rows_; ++i)
 	{
 		s += float64::toString(p[i][0], precision);
-		for (int j = 1; j < cols_; ++j)
+		for (unsigned int j = 1; j < cols_; ++j)
 		{
 			s += delim + float64::toString(p[i][j], precision);
 		}
@@ -325,10 +324,10 @@ std::string Matrix::toString(const std::string& delim, const unsigned int precis
 	/*
 	std::ostringstream res;
 	res << std::fixed << std::setprecision(precision);
-	for (int i = 0; i < rows_; ++i)
+	for (unsigned int i = 0; i < rows_; ++i)
 	{
 		res << p[i][0];
-		for (int j = 1; j < cols_; ++j)
+		for (unsigned int j = 1; j < cols_; ++j)
 		{
 			res << delim << p[i][j];
 		}
@@ -379,3 +378,4 @@ Matrix operator/(const Matrix& m, const double& num)
 	Matrix temp(m);
 	return (temp /= num);
 }
+

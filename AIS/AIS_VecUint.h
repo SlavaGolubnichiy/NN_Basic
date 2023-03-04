@@ -1,5 +1,7 @@
 #pragma once
 
+#if 0
+
 #include <string>
 
 #include "AISBase.h"
@@ -115,3 +117,5 @@ void test_AISClass()
 		printf("closest to answer=%s is (populSize=%u, genNum=%u): %s \n", toString(ais.getAnswer()).c_str(), i * 10, i * 100, toString(sol).c_str());
 	}
 }
+
+#endif

@@ -1,5 +1,7 @@
 #pragma once
 
+#if 0
+
 #include <vector>
 #include <algorithm>
 
@@ -258,3 +260,5 @@ class AISBase
 	}
 
 };
+
+#endif

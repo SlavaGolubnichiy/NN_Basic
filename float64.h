@@ -3,7 +3,9 @@
 #ifndef __FLOAT64_H__
 #define __FLOAT64_H__
 
-#include <math.h>
+
+
+#include <cmath>
 #include <sstream>	// for toString(double) with precision
 #include <iomanip>	// for toString(double) with precision
 
@@ -31,7 +33,19 @@ namespace float64
 		return res.str();
 	}
 
-	double normalize(double srcRangeMin, double srcRangeMax, double destRangeMin, double destRangeMax);
+	static double normalize(double src, const double src_range_min, const double src_range_size)
+	{
+		if (src_range_size > 0)
+		{
+			return 0.0 + (src - src_range_min) / src_range_size;
+		}
+		else
+		{
+			throw std::exception("src_range_size must be greater than 0.");
+		}
+	}
+
+	/// define methods with "static" !!! without it, you may have "multiple definitions of float64::XXX()" error
 };
 
 #endif

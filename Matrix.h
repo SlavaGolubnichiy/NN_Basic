@@ -74,4 +74,6 @@ Matrix operator*(const double& num, const Matrix& m);
 
 Matrix operator/(const Matrix& m, const double& num);
 
+
+
 #endif

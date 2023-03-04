@@ -1,8 +1,11 @@
 #pragma once
 
+#ifndef _NNETWORK_
+#define _NNETWORK_
+
 #include <stdexcept>
 
-#include "../Matrix.h"
+#include "Matrix.h"
 #include "Layer.h"
 
 
@@ -70,10 +73,13 @@ class NNetwork
 
 	Matrix runOnce(const Matrix& xColumn)
 	{
-
 		if (inputsNum != xColumn.rows())
 		{
 			throw std::exception("Number of inputs (1-column rows) must be equal to inputsSize specified");
+		}
+		if (!matop::isPositive(xColumn))
+		{
+			throw std::invalid_argument("Negative inputs are not yet supported!");
 		}
 
 		areWeightsReadonly = true;
@@ -82,6 +88,50 @@ class NNetwork
 		for (unsigned int i = 1; i < layersNum; i++)
 		{
 			layers[i].calcMe(layers[i - 1].getValues());
+		}
+		areWeightsReadonly = false;
+		return layers[layersNum - 1].getValues();
+	}
+
+	Matrix runOnceNormalized(const Matrix& xColumn)
+	{
+		if (inputsNum != xColumn.rows())
+		{
+			throw std::exception("Number of inputs (1-column rows) must be equal to inputsSize specified");
+		}
+		if (!matop::isPositive(xColumn))
+		{
+			throw std::invalid_argument("Negative inputs are not yet supported!");
+		}
+
+		areWeightsReadonly = true;
+		inputLayer->calcMe(xColumn);
+		layers[0].calcMeNormalized(inputLayer->getValues());
+		for (unsigned int i = 1; i < layersNum; i++)
+		{
+			layers[i].calcMeNormalized(layers[i - 1].getValues());
+		}
+		areWeightsReadonly = false;
+		return layers[layersNum - 1].getValues();
+	}
+
+	Matrix runOnceTanh(const Matrix& xColumn, double steepness = 3.14159)	// pi - just standard value, can be any
+	{
+		if (inputsNum != xColumn.rows())
+		{
+			throw std::exception("Number of inputs (1-column rows) must be equal to inputsSize specified");
+		}
+		if (!matop::isPositive(xColumn))
+		{
+			throw std::invalid_argument("Negative inputs are not yet supported!");
+		}
+
+		areWeightsReadonly = true;
+		inputLayer->calcMe(xColumn);
+		layers[0].calcMeTanh(inputLayer->getValues(), steepness);
+		for (unsigned int i = 1; i < layersNum; i++)
+		{
+			layers[i].calcMeTanh(layers[i - 1].getValues(), steepness);
 		}
 		areWeightsReadonly = false;
 		return layers[layersNum - 1].getValues();
@@ -113,6 +163,9 @@ class NNetwork
 			printf("layer%u.weights = \n%s\n", i, layers[i].getWeights().toString(" ").c_str());
 			printf("layer%u.values = \n%s\n", i, layers[i].getValues().toString(" ").c_str());
 		}
+		printf("^ last matrix is output \n\n");
 	}
 
 };
+
+#endif

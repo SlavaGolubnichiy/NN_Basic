@@ -3,9 +3,10 @@
 #ifndef __LAYER_H__
 #define __LAYER_H__
 
-#include "../RandomXorsh.h"
-#include "../float64.h"
-#include "../Matrix.h"
+
+#include "RandomXorsh.h"
+#include "matop.h"	// tanh(Mat), normalize(Mat) functions
+#include "Matrix.h"
 
 
 
@@ -36,7 +37,7 @@ class Layer
 		{
 			N = new Matrix(leftLayerNeuronsNum, 1);
 			w = new Matrix(leftLayerNeuronsNum, leftLayerNeuronsNum);
-			randomiseMatrix(*w);
+			randomiseMat01Floor(*w);
 		}
 		else
 		{
@@ -84,8 +85,36 @@ class Layer
 		*N = (*w) * leftLayerValues;
 	}
 
+	void calcMeNormalized(const Matrix& leftLayerValues)
+	{
+		if (w->cols() != leftLayerValues.rows())
+		{
+			throw std::logic_error("leftLayerValues matrix is not [NeuronsNum x 1]. Unable to calculate neurons.");
+		}
+		*N = (*w) * leftLayerValues;
+		matop::normalize(*N);
+	}
+
+	/// <summary>
+	/// Calculates layer's neurons' values and normalizes them using tanh(val, steepness) function.
+	/// </summary>
+	/// <param name="steepness">
+	/// Steepness defines how steep (how fast) y goes from -1 to +1 considering x goes from -inf to +inf.
+	/// </param>
+	void calcMeTanh(const Matrix& leftLayerValues, double steepness)
+	{
+		if (w->cols() != leftLayerValues.rows())
+		{
+			throw std::logic_error("leftLayerValues matrix is not [NeuronsNum x 1]. Unable to calculate neurons.");
+		}
+		*N = (*w) * leftLayerValues;
+		matop::tanhCustom(*N, steepness);
+	}
+
 	private:
-	void randomiseMatrix(Matrix& mat)
+
+	// Floor function call is temporary, for degugging simplicity
+	void randomiseMat01Floor(Matrix& mat)
 	{
 		for (unsigned int i = 0; i < mat.rows(); i++)
 		{
@@ -111,6 +140,8 @@ class Layer
 		}
 		return true;
 	}
+
+
 
 };
 

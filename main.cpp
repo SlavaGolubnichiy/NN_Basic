@@ -3,23 +3,21 @@
 #include <vector>
 #include <string>
 
-
 #include "float64.h"
-#include "Matrix.h"
 #include "NeuralNet/NNetwork.h"
+#include "matop.h"
 
 /// TODO
 // priority: HIGH
-// - separate Layer::constructor for InputLayer as possible
-// - fix int(!) rows, cols in Matrix class working with unsigned int i, j in loops
+// implement logging of each NNetwork run to .json or/and .txt file
+// 
 // 
 
 // priority: LOW
-// FileContent01ToMatrix() - file can contain not a rect. matrix
-// LayerV2::LayerV2() {} - try delete it 
 // improve code style, methods' names etc.
 // check performance
-// Classes access modificators (Matrix, LayerV2, NetworkV2)
+// separate Layer::constructor for InputLayer as possible
+// FileContent01ToMatrix() - file can contain not a rect. matrix
 // parallelize some matrix's class methords (+ , -, /, *num, toString, *mat, etc)
 
 
@@ -127,11 +125,6 @@ void FileContent01ToMatrix(const TxtData& txtData, unsigned int** m, const unsig
 
 // ----
 
-
-
-
-
-
 std::string toString(double** matrix, unsigned int matrixRows, unsigned int matrixCols, unsigned int doublePrecision)
 {
 	std::string res = "";
@@ -148,8 +141,6 @@ std::string toString(double** matrix, unsigned int matrixRows, unsigned int matr
 	return res;
 }
 
-
-#include "AIS/AIS_VecUint.h"
 
 
 
@@ -207,19 +198,36 @@ int main(int args)
 
 
 	
-	std::vector<double> in = 
+	std::vector<double> in =
 	{
 		1, 2, 3
 	};
 	Matrix x = Matrix(in, true);
 	unsigned int layersNum = 2;
 	NNetwork net = NNetwork(in.size(), layersNum);
-	net.runOnce(x);
+	
+	printf("---- without normalization \n\n");
+	Matrix output = net.runOnce(x);
 	printf("x = \n%s\n", x.toString(" ").c_str());
 	net.printLastRunData();
+	matop::normalize(output);
+	printf("normalized(output) = \n%s \n\n", output.toString().c_str());
 	
-	
-	
+	printf("\n\n");
+	printf("---- normalized \n\n");
+	Matrix outputNorm = net.runOnceNormalized(x);
+	printf("x = \n%s\n", x.toString(" ").c_str());
+	net.printLastRunData();
+	matop::normalize(outputNorm);
+	printf("normalized(outputNorm) = \n%s \n\n", outputNorm.toString().c_str());
+
+	printf("\n\n");
+	printf("---- hyperbolically tangented\n\n");
+	Matrix outputTanh = net.runOnceTanh(x, 0.2);
+	printf("x = \n%s\n", x.toString(" ").c_str());
+	net.printLastRunData();
+	matop::normalize(outputTanh);
+	printf("normalized(outputTanh) = \n%s \n\n", outputTanh.toString().c_str());
 
 
 

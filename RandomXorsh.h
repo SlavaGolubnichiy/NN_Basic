@@ -4,9 +4,6 @@
 #include <chrono>
 #include <stdint.h>
 
-#define normToRange(x, min, max)	((min) + ((x) % ((max)+1-(min))))
-#define normToRange0(x, max)		((x) % ((max)+1))
-
 
 
 // make it static (singleton)
