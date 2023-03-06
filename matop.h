@@ -9,7 +9,6 @@
 #include "Matrix.h"
 #include "float64.h"
 
-
 namespace matop
 {
 	static const double e = std::exp(1.0);

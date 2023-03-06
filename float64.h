@@ -9,6 +9,8 @@
 #include <sstream>	// for toString(double) with precision
 #include <iomanip>	// for toString(double) with precision
 
+
+
 namespace float64
 {
 	static double floor(const double value, const unsigned int precision)

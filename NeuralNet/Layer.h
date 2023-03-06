@@ -1,16 +1,13 @@
 #pragma once
 
-#ifndef __LAYER_H__
-#define __LAYER_H__
+#ifndef LAYER_H_
+#define LAYER_H_
 
-
-#include "RandomXorsh.h"
 #include "matop.h"	// tanh(Mat), normalize(Mat) functions
 #include "Matrix.h"
+#include "float64.h"
 
-
-
-static RandomXorsh random;
+#include "RandXorsh.h"
 
 // !!!
 // somehow separate Layer class from InpuLayer class
@@ -112,7 +109,6 @@ class Layer
 	}
 
 	private:
-
 	// Floor function call is temporary, for degugging simplicity
 	void randomiseMat01Floor(Matrix& mat)
 	{
@@ -120,7 +116,7 @@ class Layer
 		{
 			for (unsigned int j = 0; j < mat.cols(); j++)
 			{
-				mat.set(i, j, float64::floor(random.generateDoubleRange01(), 2));
+				mat.set(i, j, float64::floor(xorsh::generateDoubleRange01(), 2));
 			}
 		}
 	}
@@ -141,9 +137,7 @@ class Layer
 		return true;
 	}
 
-
-
 };
 
 
-#endif
+#endif	// LAYER_H_

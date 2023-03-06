@@ -3,12 +3,10 @@
 #ifndef _NNETWORK_
 #define _NNETWORK_
 
-#include <stdexcept>
+
 
 #include "Matrix.h"
 #include "Layer.h"
-
-
 
 /// train (train dataset)
 // teacher gives prepared inputs (from dataset) to NN
@@ -20,8 +18,6 @@
 /// test (test dataset)
 // NN gets inputs and creates output
 // human evaluates if NN did a good job or not
-
-
 
 class NNetwork
 {
