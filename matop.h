@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef _MATOP_
-#define _MATOP_
+#ifndef _MATOP_H_
+#define _MATOP_H_
 
 #include <float.h>
 #include <cmath>
@@ -120,11 +120,6 @@ namespace matop
 		}
 	}
 
-
-
-
 };
 
-
-
-#endif
+#endif	// MATOP_H_

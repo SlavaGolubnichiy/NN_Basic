@@ -26,7 +26,6 @@
 //
 
 #pragma once
-
 #ifndef RAND_XORSH_H_
 #define RAND_XORSH_H_
 

@@ -1,8 +1,7 @@
 #pragma once
-
+// no multiple #include protection, bc main.h can be included in main.cpp only
 
 #if 0
-
 
 #include <iostream>
 #include <fstream>
@@ -12,8 +11,6 @@
 #include "float64.h"
 #include "NeuralNet/NNetwork.h"
 #include "matop.h"
-
-
 
 class ReaderTxt
 {
@@ -43,8 +40,6 @@ class ReaderTxt
 
 		file.close();
 	}
-
-
 
 };
 
@@ -85,9 +80,7 @@ class Reader
 		{
 			contentDest.push_back(line); // add last line with EOF, if not empty
 		}
-
 	}
-
 
 };
 
@@ -117,8 +110,6 @@ void FileContent01ToMatrix(const TxtData& txtData, unsigned int** m, const unsig
 	}
 }
 
-// ----
-
 std::string toString(double** matrix, unsigned int matrixRows, unsigned int matrixCols, unsigned int doublePrecision)
 {
 	std::string res = "";
@@ -134,9 +125,6 @@ std::string toString(double** matrix, unsigned int matrixRows, unsigned int matr
 	}
 	return res;
 }
-
-
-
 
 
 
@@ -181,12 +169,7 @@ int main(int args)
 	net.thinkStep3TakeOutput(resDistrib);
 
 	printf("%s %s \n", std::to_string(resDistrib[0]).c_str(), std::to_string(resDistrib[1]).c_str());
-
 	*/
-
-
-
-
 
 	std::vector<double> in =
 	{
@@ -202,9 +185,6 @@ int main(int args)
 	net.printLastRunData();
 	matop::normalize(output);
 	printf("normalized(output) = \n%s \n\n", output.toString().c_str());
-
-
-
 	
 	/*
 	std::fstream file;
@@ -218,7 +198,6 @@ int main(int args)
 	file.close();
 	std::cout << fileStr << std::endl;
 	printf("\n");
-
 	*/
 
 	system("pause");

@@ -1,5 +1,4 @@
 #pragma once
-
 #ifndef LAYER_H_
 #define LAYER_H_
 
@@ -138,6 +137,7 @@ class Layer
 	}
 
 };
+
 
 
 #endif	// LAYER_H_

@@ -1,4 +1,6 @@
 #pragma once
+#ifndef AIS_VECUINT_H_
+#define AIS_VECUINT_H_
 
 #if 0
 
@@ -6,8 +8,6 @@
 
 #include "AISBase.h"
 #include "RandomXorsh.h"
-
-
 
 using Solution = std::vector<unsigned int>;
 using Fitness = double;
@@ -17,8 +17,6 @@ class AIS_VecUint : public AISBase<Solution, Fitness>
 	private:
 	const Solution answer = Solution{ 1,2,3,4,5,6,7,8,9,0};
 	RandomXorsh rand;
-
-
 
 	unsigned int getRandomChromo()
 	{
@@ -119,3 +117,5 @@ void test_AISClass()
 }
 
 #endif
+
+#endif	// AIS_VECUINT_H_

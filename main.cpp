@@ -1,7 +1,7 @@
 #include <cstdlib>
 
-//#include "NeuralNet/NNetwork.h"
-//#include "matop.h"
+#include "NeuralNet/NNetwork.h"
+#include "matop.h"
 
 /// TODO
 // priority: HIGH
@@ -15,14 +15,11 @@
 // FileContent01ToMatrix() - file can contain not a rect. matrix
 // parallelize some matrix's class methords (+ , -, /, *num, toString, *mat, etc)
 
-#include "RandXorsh.h"
-
 int main(int args)
 {
-	xorsh::test_generate32(2000);
 
 
-	/*
+	
 	std::vector<double> in =
 	{
 		1, 2, 3
@@ -53,7 +50,7 @@ int main(int args)
 	net.printLastRunData();
 	matop::normalize(outputTanh);
 	printf("normalized(outputTanh) = \n%s \n\n", outputTanh.toString().c_str());
-	*/
+	
 
 	
 	system("pause");

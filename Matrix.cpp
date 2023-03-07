@@ -7,8 +7,8 @@
 #include "float64.h"
 
 
-/* PUBLIC MEMBER FUNCTIONS
- ********************************/
+
+/* PUBLIC MEMBER FUNCTIONS */
 
 void Matrix::exceptIfDenyDimensions(const unsigned int rows, const unsigned int cols)
 {
@@ -41,8 +41,6 @@ void Matrix::exceptIfDenyAddSub(const Matrix& m1, const Matrix& m2)
 		throw std::invalid_argument("m1.cols must be equal to m2.cols");
 	}
 }
-
-
 
 // matrix like:
 // 1 0 0
@@ -174,7 +172,6 @@ Matrix::Matrix(const Matrix& m)
 		}
 	}
 }
-
 
 unsigned int Matrix::rows() const
 {
@@ -340,8 +337,7 @@ std::string Matrix::toString(const std::string& delim, const unsigned int precis
 
 
 
-/* NON-MEMBER FUNCTIONS
- ********************************/
+/* NON-MEMBER FUNCTIONS */
 
 Matrix operator+(const Matrix& m1, const Matrix& m2)
 {
@@ -378,4 +374,3 @@ Matrix operator/(const Matrix& m, const double& num)
 	Matrix temp(m);
 	return (temp /= num);
 }
-

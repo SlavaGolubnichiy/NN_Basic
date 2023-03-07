@@ -1,7 +1,6 @@
 #pragma once
-
-#ifndef __MATRIX_H__
-#define __MATRIX_H__
+#ifndef MATRIX_H_
+#define MATRIX_H_
 
 #include <vector>
 
@@ -60,8 +59,6 @@ class Matrix
 	double **p = nullptr;
 };
 
-
-
 Matrix operator+(const Matrix& m1, const Matrix& m2);
 
 Matrix operator-(const Matrix& m1, const Matrix& m2);
@@ -74,6 +71,4 @@ Matrix operator*(const double& num, const Matrix& m);
 
 Matrix operator/(const Matrix& m, const double& num);
 
-
-
-#endif
+#endif	// MATRIX_H_

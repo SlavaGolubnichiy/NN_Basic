@@ -1,15 +1,10 @@
 #pragma once
-
-#ifndef __FLOAT64_H__
-#define __FLOAT64_H__
-
-
+#ifndef FLOAT64_H_
+#define FLOAT64_H_
 
 #include <cmath>
 #include <sstream>	// for toString(double) with precision
 #include <iomanip>	// for toString(double) with precision
-
-
 
 namespace float64
 {
@@ -50,4 +45,4 @@ namespace float64
 	/// define methods with "static" !!! without it, you may have "multiple definitions of float64::XXX()" error
 };
 
-#endif
+#endif	// FLOAT_H_

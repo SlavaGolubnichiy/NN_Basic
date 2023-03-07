@@ -1,9 +1,6 @@
 #pragma once
-
-#ifndef _NNETWORK_
-#define _NNETWORK_
-
-
+#ifndef _NNETWORK_H_
+#define _NNETWORK_H_
 
 #include "Matrix.h"
 #include "Layer.h"
@@ -164,4 +161,4 @@ class NNetwork
 
 };
 
-#endif
+#endif	// _NNETWORK_H_

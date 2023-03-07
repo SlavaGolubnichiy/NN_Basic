@@ -1,4 +1,6 @@
 #pragma once
+#ifndef AIS_TEMPLATE_H_
+#define AIS_TEMPLATE_H_
 
 #include <iostream>
 #include <vector>
@@ -6,12 +8,9 @@
 #include <random>
 #include <string>
 
-
 #if 0
 
 #define TEST_GENALG 1
-
-
 
 /// todo:
 // test non-custom functions
@@ -20,8 +19,6 @@
 // make AIS as a Solution-and-Fitness-types-template class with custom functions as pure virtual methods
 // use it as described in User Manual, test as a template
 
-
-
 // implement:
 // generateRandomSol();	-	generate single solution (used at init stage)
 // fitness(Solution);	-	calculate fitness value of a solution (how good solution is)
@@ -29,14 +26,10 @@
 // mutate(Sol);			-	mutate (make a small random change) in a Solution
 /// other methods are already implemented and do not depend on Solution type !!!
 
-
-
 using Solution			= std::vector<unsigned int>;
 using Fitness			= double;
 struct SolEntry			{ Solution solution; Fitness fitness; };
 using SolsEntriesList	= std::vector<SolEntry>;
-
-
 
 
 
@@ -264,3 +257,7 @@ namespace test_genalg
 #endif
 
 #endif
+
+
+
+#endif	// AIS_TEMPLATE_H_

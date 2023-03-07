@@ -21,10 +21,9 @@ namespace
 	}
 
 	static uint64_t state = getNsFromEpoch(); // careful: same initial values produce same sequences
-
 }
 
-// public: (definitions)
+/* public: (definitions) */
 
 uint32_t xorsh::generate32()	// xorsh32
 {
@@ -61,7 +60,7 @@ double xorsh::generateDoubleRange01()
 	return dfloat;
 }
 
-// TESTS
+/* TESTS */
 
 void xorsh::test_generate32(const unsigned int generations)
 {

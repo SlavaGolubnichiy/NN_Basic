@@ -2,8 +2,8 @@
 // Provides function for operating/analysing/etc. of std::vectors.
 
 #pragma once
-#ifndef _VECOP_H_
-#define _VECOP_H_
+#ifndef VECOP_H_
+#define VECOP_H_
 
 #include <vector>
 
@@ -23,4 +23,4 @@ namespace vecop
 	}
 };
 
-#endif
+#endif	// VECOP_H_

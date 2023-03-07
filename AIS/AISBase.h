@@ -1,4 +1,6 @@
 #pragma once
+#ifndef AIS_BASE_H_
+#define AIS_BASE_H_
 
 #if 0
 
@@ -20,8 +22,6 @@
 /*
 
 #include "AISBase.h"
-
-
 
 using Solution = std::vector<unsigned int>;
 using Fitness = double;
@@ -53,8 +53,6 @@ class AIS_VecUint : public AISBase<Solution, Fitness>
 
 };
 
-
-
 void test_AISClass()
 {
 	AIS_VecUint ais = AIS_VecUint();
@@ -65,11 +63,7 @@ void test_AISClass()
 	}
 }
 
-
-
 */
-
-
 
 template <typename SolutionType, typename FitnessType>
 class AISBase
@@ -187,10 +181,7 @@ class AISBase
 		}
 	}
 
-
-
 	public:
-
 	// the genetic algorithm function.
 	// If divided to initPopul(); and evolvePopul(); => population can be saved under the class object and solution can 
 	// be evolved, then evolved more and more on genNum generations with each evolvePopul(unsigned int genNum); call (on-test learning ? :) )
@@ -262,3 +253,5 @@ class AISBase
 };
 
 #endif
+
+#endif	// AIS_BASE_H_
